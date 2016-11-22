@@ -1,0 +1,21 @@
+{
+  "name": "nodebots2017",
+  "version": "1.0.0",
+  "description": "nodebots",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "nodebot",
+    "feather",
+    "johnny-five"
+  ],
+  "dependencies": {
+    "johnny-five": "^0.9.32",
+    "etherport-client": "^0.1.0"
+  },
+  "author": "rachel weil",
+  "license": "ISC"
+}
