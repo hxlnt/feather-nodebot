@@ -1,65 +1,128 @@
+'use strict';
+
+// CHANGE THESE THREE VARIABLES! //
+var deviceHost = "192.168.XX.XX" // This is the IP address shown in Arduino IDE Serial Monitor after uploading Firmata
+var deviceID = 'my_bot_XXXXXXXX'; // This is the deviceID you entered in iothub-explorer
+var deviceKey = 'XXXXXXXXXXXXXXXXXXXXXX'; // This is the primary key returned by iothub-explorer
+
+// Node modules - Don't modify
+var moment = require('moment');
 var EtherPortClient = require("etherport-client").EtherPortClient;
 var Firmata = require("johnny-five/node_modules/firmata");
 var five = require("johnny-five");
+var Protocol = require('azure-iot-device-amqp').Amqp;
+var Client = require('azure-iot-device').Client;
+var Message = require('azure-iot-device').Message;
 
+// Setup - Don't modify
 var board = new five.Board({
-    io: new Firmata(new EtherPortClient({
-        host: "192.168.1.2",
-        port: 3030
-    })),
-    timeout: 30000
-});
-
+    io: new Firmata(new EtherPortClient({ host: deviceHost, port: 3030 })), timeout: 30000 });
+var connectionString = 'HostName=huzzahbots.azure-devices.net;DeviceId=' + deviceID + ';SharedAccessKey=' + deviceKey + '';
+var client = Client.fromConnectionString(connectionString, Protocol);
+var currentaction = "offline";
 board.on('ready', function () {
-    console.log("It's Johnny-Five time!");
+    letsPlay();
+    var connectCallback = function (err) {
+        if (err) { console.error('Your device is not connected to the web dashboard. Could not connect: ' + err.message); } 
+        else {
+            console.log('Client connected');
+            client.on('message', function (msg) {
+                currentaction = "home";
+                console.log('Id: ' + msg.messageId + ' Body: ' + msg.data);
+                client.complete(msg, printResultFor('completed'));
+            });
+            client.on('error', function (err) {
+                currentaction = "offline";
+                console.error(err.message);
+            });
+            client.on('disconnect', function () {
+                currentaction = "offline";
+                client.removeAllListeners();
+                client.open(connectCallback);
+            });
+        }
+    };
+    client.open(connectCallback);
+});
+    function printResultFor(op) {
+        return function printResult(err, res) {
+            if (err) console.log(op + ' error: ' + err.toString());
+            if (res) console.log(op + ' status: ' + res.constructor.name);
+        };
+    }
+function letsPlay(){
+    var rightWheel = new five.Motor({ pins: [4, 12], invertPWM: false });
+    var leftWheel = new five.Motor({ pins: [5, 14], invertPWM: false });
+    var scalar = 1280;
+    var actioncounter = 0;
+    var newcommand = "clear()";
 
-    // Connect long leg of LED to pin 0. Connect short leg to GND
-    var led = new five.Led(0);
-    led.blink(500);
+// Write your Johnny-Five code here
+    
+    var speed = 255;
+    stop();
+    
+///////////////////////////////////
+   
+    function actionSender(){
+        Math.round(actioncounter);
+        if (currentaction == "fd" || currentaction == "bk") {
+            var a = (moment.now() - actioncounter) * 0.18 * speed / scalar;
+            newcommand = "" + currentaction +"(" + a + ")";
+        }
+        else if (currentaction == "rt" || currentaction == "lt") {
+            var a = (moment.now() - actioncounter) * 0.1 * speed / scalar;
+            newcommand = "" + currentaction +"(" + a + ")";
+        }
+        else if (currentaction == "home") {
+            newcommand = "clear()";
+        }
+        else { newcommand = "fd(0)" };
+        var data = JSON.stringify({ deviceId: deviceID, command: newcommand });
+        var message = new Message(data);
+        console.log('Sending message: ' + message.getData());
+        client.sendEvent(message, printResultFor('send'));
+        actioncounter = moment.now();
+    }
 
-    // Connect motor pins from H-bridge to 2, 12, 13, and 16 as indicated.
-    // Connect VCC and GND pins to battery pack leads (VCC-red, GND-black)
-    // Connect GND pin and battery GND lead to GND pin on Huzzah
-    var rightWheel = new five.Motor({ pins: [12, 2], invertPWM: false });
-    var leftWheel = new five.Motor({ pins: [16, 13], invertPWM: false });
-
-    var speed = 0;
-
-    // function reverse() {
-    //     leftWheel.rev(speed);
-    //     rightWheel.rev(speed);
-    //     console.log("Back it up...");
-    // }
+    function reverse() { // Doesn't work, car just stops.
+        leftWheel.rev(speed); 
+        rightWheel.rev(speed);
+        currentaction = "bk";
+        console.log("Back it up...");
+    }
     function forward() {
         leftWheel.fwd(speed);
         rightWheel.fwd(speed);
+        currentaction = "fd";
         console.log("Forward!");
     }
     function stop() {
-        leftWheel.rev(0);
-        rightWheel.rev(0);
+        leftWheel.rev(0); // This makes the car stop.
+        rightWheel.rev(0); 
+        currentaction = "stopped";
         console.log("STAHP");
     }
     function left() {
         leftWheel.rev(speed);
         rightWheel.fwd(speed);
+        currentaction = "lt";
         console.log("To the left...");
     }
     function right() {
         leftWheel.fwd(speed);
         rightWheel.rev(speed);
+        currentaction = "rt";
         console.log("To the right...");
     }
     function exit() {
-        leftWheel.stop();
-        rightWheel.stop();
-        led.off();
+        currentaction = "offline";
         setTimeout(process.exit, 1000);
     }
 
     var keyMap = {
         'up': forward,
-        // 'down': reverse,
+        'down': reverse,
         'left': left,
         'right': right,
         'space': stop,
@@ -71,7 +134,7 @@ board.on('ready', function () {
     stdin.resume();
     stdin.on("keypress", function (chunk, key) {
         if (!key || !keyMap[key.name]) return;
+        actionSender();
         keyMap[key.name]();
-
     });
-});
+}
