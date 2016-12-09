@@ -49,6 +49,6 @@ A work in progress.
 >> STAHP
 Client connected
 ```
-Use the keyboard keys up, right, and left to drive the car. Press the space bar to stop the car. Press q to quit.
+Inside the Node.js command prompt, use the keyboard keys up, right, and left to drive the car. Press the space bar to stop the car. Press q to quit.
 
 ## Coming soon: Link to the Robotic Traces Azure IoT dashboard, where you can see a visualization of the motion of all connected cars.
