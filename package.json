@@ -13,8 +13,11 @@
     "johnny-five"
   ],
   "dependencies": {
+    "azure-iot-device": "1.1.0",
+    "azure-iot-device-amqp": "1.1.0",
+    "etherport-client": "^0.1.0",
     "johnny-five": "^0.9.32",
-    "etherport-client": "^0.1.0"
+    "moment": "^2.17.1"
   },
   "author": "rachel weil",
   "license": "ISC"
