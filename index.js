@@ -8,7 +8,7 @@ var deviceKey = 'XXXXXXXXXXXXXXXXXXXXXX'; // This is the primary key returned by
 // Node modules - Don't modify
 var moment = require('moment');
 var EtherPortClient = require("etherport-client").EtherPortClient;
-var Firmata = require("johnny-five/node_modules/firmata");
+var Firmata = require("firmata");
 var five = require("johnny-five");
 var Protocol = require('azure-iot-device-amqp').Amqp;
 var Client = require('azure-iot-device').Client;
