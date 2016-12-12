@@ -5,7 +5,7 @@ A work in progress.
 # Software requirements
  - [Arduino IDE](https://www.arduino.cc/en/Main/Software), v. 1.6.4 or greater
  - [git](https://git-scm.com/)
- - [node](https://nodejs.org/en/)
+ - [node](https://nodejs.org/en/) with npm v3 or greater
 
 # Instructions
 
