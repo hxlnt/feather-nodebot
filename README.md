@@ -40,7 +40,7 @@ A work in progress.
  16. Update index.js to contain your device's ID (name), primary key, and IP address (from Step 2 above).
  
 ## Drive your bot all around town!
- 17. ``npm start``
+ 17. ``node index.js``
  18. You should see an output similar to this one upon a successful connection:
 ```
 1481283325844 Device(s) Firmata
