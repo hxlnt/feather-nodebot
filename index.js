@@ -53,7 +53,7 @@ board.on('ready', function () {
 function letsPlay(){
     var rightWheel = new five.Motor({ pins: [4, 12], invertPWM: false });
     var leftWheel = new five.Motor({ pins: [5, 14], invertPWM: false });
-    var scalar = 1280;
+    var scalar = 1280; // Friction coefficient
     var actioncounter = 0;
     var newcommand = "clear()";
 
@@ -65,20 +65,24 @@ function letsPlay(){
 ///////////////////////////////////
    
     function actionSender(){
+        var distance = 0;
         Math.round(actioncounter);
         if (currentaction == "fd" || currentaction == "bk") {
             var a = (moment.now() - actioncounter) * 0.18 * speed / scalar;
             newcommand = "" + currentaction +"(" + a + ")";
+            distance = a;
         }
         else if (currentaction == "rt" || currentaction == "lt") {
             var a = (moment.now() - actioncounter) * 0.1 * speed / scalar;
             newcommand = "" + currentaction +"(" + a + ")";
+            distance = 0;
         }
         else if (currentaction == "home") {
             newcommand = "clear()";
+            distance = 0;
         }
-        else { newcommand = "fd(0)" };
-        var data = JSON.stringify({ deviceId: deviceID, command: newcommand });
+        else { newcommand = "fd(0)"; };
+        var data = JSON.stringify({ deviceId: deviceID, command: newcommand, distance: distance });
         var message = new Message(data);
         console.log('Sending message: ' + message.getData());
         client.sendEvent(message, printResultFor('send'));
