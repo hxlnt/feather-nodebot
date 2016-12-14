@@ -81,11 +81,7 @@ function letsPlay(){
             newcommand = "clear()";
             distance = 0;
         }
-<<<<<<< HEAD
         else { newcommand = "fd(0)"; };
-=======
-        else { newcommand = "fd(0)" };
->>>>>>> 4a6a86f173ada3698f4e7d374325f54877012719
         var data = JSON.stringify({ deviceId: deviceID, command: newcommand, distance: distance });
         var message = new Message(data);
         console.log('Sending message: ' + message.getData());
