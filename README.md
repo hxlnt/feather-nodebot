@@ -13,7 +13,7 @@ A work in progress.
 
 ![Chassis and H-bridge](IMG_6237 (2).JPG)
 
-1. Assemble the chassis kit. *Hint: You can bend the red and black motor wire ends into hooks that will stay on the motors without solder.*
+1. Assemble the chassis kit. *Hint: You can bend the red and black motor wire ends into hooks that will stay on the motors without solder for testing purposes.*
 2. Affix the free ends of the motor wires to the screw terminals in the H-bridge (red-black-red-black). Feed the wires through the holes in the chassis to secure them.
 3. Gently plug the Feather board into the breadboard.
 4. Attach six female-male jumper wires to the other end of the H-bridge. Connect the two pins labeled motor A to the Feather's pin 4 and pin 12. Connect the two pins labeled motor B to the Feather's pin 5 and pin 14. Connect H-bridge GND to the ground rail of the breadboard. Connect H-bridge VCC to the power rail of the breadboard. 
@@ -33,14 +33,14 @@ A work in progress.
  11. ``cd feather-nodebot``
  12. ``npm install``
  
-## Registering your device on the "Robotic Traces" Azure IoT dashboard 
+## Registering your device on the Azure IoT dashboard 
  13. ``npm install -g iothub-explorer``
  14. ``iothub-explorer login "HostName=huzzahbots.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=SHARED_ACCESS_KEY_GOES_HERE"`` (Replace ``SHARED_ACCESS_KEY_GOES_HERE`` with the shared access key provided to you separately.)
  15. ``iothub-explorer create my-cool-device-name --connection-string`` where ``my-cool-device-name`` is whatever you want your device to be called. Take note of this name as well as the primary key returned back from the command line tool.
  16. Update index.js to contain your device's ID (name), primary key, and IP address (from Step 2 above).
  
 ## Drive your bot all around town!
- 17. ``npm start``
+ 17. ``node index.js``
  18. You should see an output similar to this one upon a successful connection:
 ```
 1481283325844 Device(s) Firmata
@@ -51,4 +51,4 @@ Client connected
 ```
 Inside the Node.js command prompt, use the keyboard keys up, right, and left to drive the car. Press the space bar to stop the car. Press q to quit.
 
-## Coming soon: Link to the Robotic Traces Azure IoT dashboard, where you can see a visualization of the motion of all connected cars.
+## Coming soon: Link to the Azure IoT dashboard, where you can see a visualization of the motion and stats of all cars.
