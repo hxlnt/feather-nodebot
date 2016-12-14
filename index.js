@@ -69,16 +69,19 @@ function letsPlay(){
         if (currentaction == "fd" || currentaction == "bk") {
             var a = (moment.now() - actioncounter) * 0.18 * speed / scalar;
             newcommand = "" + currentaction +"(" + a + ")";
+            distance = a;
         }
         else if (currentaction == "rt" || currentaction == "lt") {
             var a = (moment.now() - actioncounter) * 0.1 * speed / scalar;
             newcommand = "" + currentaction +"(" + a + ")";
+            distance = 0;
         }
         else if (currentaction == "home") {
             newcommand = "clear()";
+            distance = 0;
         }
         else { newcommand = "fd(0)" };
-        var data = JSON.stringify({ deviceId: deviceID, command: newcommand });
+        var data = JSON.stringify({ deviceId: deviceID, command: newcommand, distance: distance });
         var message = new Message(data);
         console.log('Sending message: ' + message.getData());
         client.sendEvent(message, printResultFor('send'));
