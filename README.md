@@ -18,9 +18,9 @@ A work in progress.
 3. Gently plug the Feather board into the breadboard.
 4. Attach six female-male jumper wires to the other end of the H-bridge. Connect the two pins labeled motor A to the Feather's pin 4 and pin 12. Connect the two pins labeled motor B to the Feather's pin 5 and pin 14. Connect H-bridge GND to the ground rail of the breadboard. Connect H-bridge VCC to the power rail of the breadboard. 
 5. Use a male-male jumper to connect the breadboard ground rail to the GND pin of the Feather.
-6. Add 4 AA batteries to the battery holder and plug the red wire into the power rail and the black wire into the ground rail. *Hint: You might want to leave the red wire unplugged until you're ready to drive the car in lieu of an on/off switch.*
-6a. *Optional* Follow circuit layout below to add an on/off switch for your battery pack.
-7. Use a ziptie to hold the breadboard, battery pack, and USB charger (to be plugged in later) to the chassis platform.
+6. Add 4 AA batteries to the battery holder and plug the red wire into the power rail and the black wire into the ground rail. *Hint: You might want to leave the red wire unplugged until you're ready to drive the car in lieu of an on/off switch..*
+7. *Optional: Add an on/off switch to your bot by following the circuit diagram below*
+8. Use a ziptie to hold the breadboard, battery pack, and USB charger (to be plugged in later) to the chassis platform.
 
 ![CircuitDiagram](featherbotDiagram.png)
 
