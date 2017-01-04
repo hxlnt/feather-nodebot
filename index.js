@@ -59,7 +59,7 @@ function letsPlay(){
 
 // Write your Johnny-Five code here
     
-    var speed = 255;
+    var speed = 0;
     stop();
     
 ///////////////////////////////////
