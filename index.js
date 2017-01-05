@@ -53,14 +53,15 @@ board.on('ready', function () {
 function letsPlay(){
     var rightWheel = new five.Motor({ pins: [4, 12], invertPWM: false });
     var leftWheel = new five.Motor({ pins: [5, 14], invertPWM: false });
-    var scalar = 1280; // Friction coefficient
+    var scalar = 256; // Friction coefficient
     var actioncounter = 0;
-    var newcommand = "clear()";
+    var newcommand = "home()";
 
 // Write your Johnny-Five code here
     
     var speed = 0;
-    stop();
+    leftWheel.rev(0);
+    rightWheel.rev(0);
     
 ///////////////////////////////////
    
@@ -73,7 +74,7 @@ function letsPlay(){
             distance = a;
         }
         else if (currentaction == "rt" || currentaction == "lt") {
-            var a = (moment.now() - actioncounter) * 0.1 * speed / scalar;
+            var a = (moment.now() - actioncounter) * 0.18 * speed / scalar;
             newcommand = "" + currentaction +"(" + a + ")";
             distance = 0;
         }
@@ -81,7 +82,10 @@ function letsPlay(){
             newcommand = "clear()";
             distance = 0;
         }
-        else { newcommand = "fd(0)"; };
+        else { newcommand = "fd(0)"; 
+            distance = 0; 
+             };
+        distance = distance.toString();
         var data = JSON.stringify({ deviceId: deviceID, command: newcommand, distance: distance });
         var message = new Message(data);
         console.log('Sending message: ' + message.getData());
@@ -89,15 +93,10 @@ function letsPlay(){
         actioncounter = moment.now();
     }
 
-    function reverse() { // Doesn't work, car just stops.
-        leftWheel.rev(speed); 
-        rightWheel.rev(speed);
-        currentaction = "bk";
-        console.log("Back it up...");
-    }
+
     function forward() {
-        leftWheel.fwd(speed);
-        rightWheel.fwd(speed);
+        leftWheel.fwd(0);
+        rightWheel.fwd(0);
         currentaction = "fd";
         console.log("Forward!");
     }
@@ -105,19 +104,19 @@ function letsPlay(){
         leftWheel.rev(0); // This makes the car stop.
         rightWheel.rev(0); 
         currentaction = "stopped";
-        console.log("STAHP");
+        console.log("Stop!");
     }
     function left() {
-        leftWheel.rev(speed);
-        rightWheel.fwd(speed);
+        leftWheel.rev(0);
+        rightWheel.fwd(0);
         currentaction = "lt";
-        console.log("To the left...");
+        console.log("Left!");
     }
     function right() {
-        leftWheel.fwd(speed);
-        rightWheel.rev(speed);
+        leftWheel.fwd(0);
+        rightWheel.rev(0);
         currentaction = "rt";
-        console.log("To the right...");
+        console.log("Right!");
     }
     function exit() {
         currentaction = "offline";
@@ -126,7 +125,6 @@ function letsPlay(){
 
     var keyMap = {
         'up': forward,
-        'down': reverse,
         'left': left,
         'right': right,
         'space': stop,
