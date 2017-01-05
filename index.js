@@ -103,19 +103,19 @@ function letsPlay(){
         leftWheel.rev(0); // This makes the car stop.
         rightWheel.rev(0); 
         currentaction = "stopped";
-        console.log("STAHP");
+        console.log("Stop!");
     }
     function left() {
         leftWheel.rev(0);
         rightWheel.fwd(0);
         currentaction = "lt";
-        console.log("To the left...");
+        console.log("Left!");
     }
     function right() {
         leftWheel.fwd(0);
         rightWheel.rev(0);
         currentaction = "rt";
-        console.log("To the right...");
+        console.log("Right!");
     }
     function exit() {
         currentaction = "offline";
