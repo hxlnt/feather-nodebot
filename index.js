@@ -59,9 +59,9 @@ function letsPlay(){
 
 // Write your Johnny-Five code here
     
-    var speed = 0;
-    leftWheel.rev(0);
-    rightWheel.rev(0);
+    var speed = 255;
+    leftWheel.rev(0); // This makes the car stop.
+    rightWheel.rev(0); 
     
 ///////////////////////////////////
    
@@ -79,12 +79,13 @@ function letsPlay(){
             distance = 0;
         }
         else if (currentaction == "home") {
-            newcommand = "clear()";
+            newcommand = "home()";
             distance = 0;
         }
-        else { newcommand = "fd(0)"; 
-            distance = 0; 
-             };
+        else { 
+            newcommand = "fd(0)"; 
+            distance = 0;
+        };
         distance = distance.toString();
         var data = JSON.stringify({ deviceId: deviceID, command: newcommand, distance: distance });
         var message = new Message(data);
@@ -92,8 +93,6 @@ function letsPlay(){
         client.sendEvent(message, printResultFor('send'));
         actioncounter = moment.now();
     }
-
-
     function forward() {
         leftWheel.fwd(0);
         rightWheel.fwd(0);
@@ -104,19 +103,19 @@ function letsPlay(){
         leftWheel.rev(0); // This makes the car stop.
         rightWheel.rev(0); 
         currentaction = "stopped";
-        console.log("Stop!");
+        console.log("STAHP");
     }
     function left() {
         leftWheel.rev(0);
         rightWheel.fwd(0);
         currentaction = "lt";
-        console.log("Left!");
+        console.log("To the left...");
     }
     function right() {
         leftWheel.fwd(0);
         rightWheel.rev(0);
         currentaction = "rt";
-        console.log("Right!");
+        console.log("To the right...");
     }
     function exit() {
         currentaction = "offline";
