@@ -1,14 +1,41 @@
-# nodebots
+# Feather HUZZAH NodeBot
 
-A work in progress.
+Put Javascript on a Feather because... Javascript!
 
 # Software requirements
  - [Arduino IDE](https://www.arduino.cc/en/Main/Software), v. 1.6.4 or greater
  - [git](https://git-scm.com/)
  - [node](https://nodejs.org/en/) with npm v3 or greater
+ - [USB driver installer](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx) for your OS
 
 # Instructions
 
+## Setting up the Feather HUZZAH with Johnny-Five and WiFi communication
+ 7. [Download](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx) and install the USB driver for your OS. Mac users: See note below.
+ 8. Open the Arduino IDE and choose Preferences. Find the Additional Board Manager URLs field and enter the following URL: ``http://arduino.esp8266.com/stable/package_esp8266com_index.json``.
+ 9. In Tools > Board > Board Manager, search for ESP8266 and install the corresponding package.
+ 10. In Tools > Board, select Adafruit HUZZAH.
+ 11. Open terminal and run ``git clone https://github.com/firmata/arduino.git ~/Documents/Arduino/libraries/Firmata``. Once this is  complete, restart the Arduino IDE.
+ 12. In File > Examples > Firmata, select StandardFirmataWifi. You'll need to make a few changes to this code.
+   - Line 85 of StandardFirmataWifi.ino: uncomment define SERIAL_DEBUG.
+   - Line 119 of wifiConfig.h: Set char ssid[] to the name of the WiFi (SSID) you want to connect to.
+   - Line 151 of wifiConfig.h: Set wpa_passphrase to the password of the WiFi you want to connect to. Ensure that lines 148-151 are not commented out.
+ 13. Select File > Save As and save your firmware with a new name like StandardFirmataWifi-NodeBots. Plug in the board and ensure that the correct COM port for your device is selected under Tools > Port.
+ 14. Click the verify button in the Arduino IDE (checkmark on the top left toolbar). Once your code is verified, upload it by clicking the right arrow button. Once you see that the code has been uploaded 100%, you are good to go!
+ 15. You can now disconnect the Feather from computer and attach USB power bank to micro USB port on the Feather.
+ - (Note for Mac OS X: The USB driver installation process was a little tricky--I ended up running the installer, then navigating to the folders created by it, finding the OS X folders, and running another installer inside there. The Arduino IDE didn't recognize the COM port at first. I tried a combination of restarting the machine with the device plugged in, changing ports, and changing cables 'til it just worked, but it wasn't clear what exactly was the magic combination that got it up and running. You can see some debugging information [here](http://community.silabs.com/t5/Interface-Knowledge-Base/Troubleshooting-the-CP210x-USB-to-UART-Bridge-VCP-Drivers-on-a/ta-p/159012). If you are unable to get this working on a Mac, see if you can borrow a PC for a bit--you only need to flash the device once.)
+ 
+## Downloading the code to control your bot from the command line
+ 10. Clone this repo to your local machine (``git clone https://github.com/hxlnt/feather-nodebot.git``).
+ 11. Then, ``cd feather-nodebot``
+ 12. Then, ``npm install``
+ 
+## Registering your device on RoboWriter, the
+ 13. ``npm install -g iothub-explorer``
+ 14. ``iothub-explorer login "HostName=huzzahbots.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=SHARED_ACCESS_KEY_GOES_HERE"`` (Replace ``SHARED_ACCESS_KEY_GOES_HERE`` with the shared access key provided to you separately.)
+ 15. ``iothub-explorer create my-cool-device-name --connection-string`` where ``my-cool-device-name`` is whatever you want your device to be called. Take note of this name as well as the primary key returned back from the command line tool.
+ 16. Update index.js to contain your device's ID (name), primary key, and IP address (from Step 2 above).
+ 
 ## Wire up the bot
 
 ![Chassis and H-bridge](IMG_6237 (2).JPG)
@@ -23,22 +50,6 @@ A work in progress.
 8. Use a ziptie to hold the breadboard, battery pack, and USB charger (to be plugged in later) to the chassis platform.
 
 ![CircuitDiagram](featherbotDiagram.png)
-
-## Setting up the Feather HUZZAH with Johnny-Five and WiFi communication
- 7. [Download](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx) and install the USB driver for your OS.
- 8. Follow only Step 1 and Step 2 on [this website](http://www.samjulien.com/johnny-feather/). In Step 2, you may need to change the git command to ``git clone https://github.com/firmata/arduino.git ~/Documents/Arduino/libraries/Firmata``. *Hint: Be sure that your laptop and the device are connecting to the same WiFi SSID.*
- 9. Disconnect the Feather from computer and attach USB power bank to micro USB port on the Feather.
- 
-## Downloading the code to control your bot
- 10. Clone this repo to your local machine (``git clone https://github.com/hxlnt/feather-nodebot.git``).
- 11. ``cd feather-nodebot``
- 12. ``npm install``
- 
-## Registering your device on the Azure IoT dashboard 
- 13. ``npm install -g iothub-explorer``
- 14. ``iothub-explorer login "HostName=huzzahbots.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=SHARED_ACCESS_KEY_GOES_HERE"`` (Replace ``SHARED_ACCESS_KEY_GOES_HERE`` with the shared access key provided to you separately.)
- 15. ``iothub-explorer create my-cool-device-name --connection-string`` where ``my-cool-device-name`` is whatever you want your device to be called. Take note of this name as well as the primary key returned back from the command line tool.
- 16. Update index.js to contain your device's ID (name), primary key, and IP address (from Step 2 above).
  
 ## Drive your bot all around town!
  17. ``node index.js``
