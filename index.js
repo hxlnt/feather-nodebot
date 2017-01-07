@@ -2,7 +2,7 @@
 
 // CHANGE THESE THREE VARIABLES! //
 var deviceHost = "192.168.XX.XX" // This is the IP address shown in Arduino IDE Serial Monitor after uploading Firmata
-var deviceID = 'my_bot_XXXXXXXX'; // This is the deviceID you entered in iothub-explorer
+var deviceID = 'myname'; // This is the deviceID you entered in iothub-explorer
 var deviceKey = 'XXXXXXXXXXXXXXXXXXXXXX'; // This is the primary key returned by iothub-explorer
 
 // Node modules - Don't modify
@@ -56,15 +56,10 @@ function letsPlay(){
     var scalar = 256; // Friction coefficient
     var actioncounter = 0;
     var newcommand = "home()";
-
-// Write your Johnny-Five code here
-    
     var speed = 255;
-    leftWheel.rev(0); // This makes the car stop.
+    leftWheel.rev(0);
     rightWheel.rev(0); 
-    
-///////////////////////////////////
-   
+
     function actionSender(){
         var distance = 0;
         Math.round(actioncounter);
@@ -93,6 +88,15 @@ function letsPlay(){
         client.sendEvent(message, printResultFor('send'));
         actioncounter = moment.now();
     }
+
+////////////////////////////////////////////////////////////////
+
+// Write your Johnny-Five code here!
+    
+
+///////////////////////////////////////////////////////////////
+
+// These functions are for stopping and moving the car with a little workaround specific to the Feather HUZZAH board and Johnny-Five. Leave these as they are.
     function forward() {
         leftWheel.fwd(0);
         rightWheel.fwd(0);
@@ -122,6 +126,7 @@ function letsPlay(){
         setTimeout(process.exit, 1000);
     }
 
+// This is the code for controlling car actions from the command line
     var keyMap = {
         'up': forward,
         'left': left,
