@@ -2,8 +2,8 @@
 
 // CHANGE THESE THREE VARIABLES! //
 var deviceHost = "192.168.XX.XX" // This is the IP address shown in Arduino IDE Serial Monitor after uploading Firmata
-var deviceID = 'myname'; // This is the deviceID you entered in iothub-explorer
-var deviceKey = 'XXXXXXXXXXXXXXXXXXXXXX'; // This is the primary key returned by iothub-explorer
+var deviceID = 'MYDEVICENAME'; // This is the deviceID you entered in iothub-explorer
+var deviceKey = 'XXXXXXXXXXXXXXXX'; // This is the primary key returned by iothub-explorer
 
 // Node modules - Don't modify
 var moment = require('moment');
@@ -51,8 +51,8 @@ board.on('ready', function () {
         };
     }
 function letsPlay(){
-    var rightWheel = new five.Motor({ pins: [4, 12], invertPWM: false });
-    var leftWheel = new five.Motor({ pins: [5, 14], invertPWM: false });
+    var rightWheel = new five.Motor({ pins: [4, 12], invertPWM: true });
+    var leftWheel = new five.Motor({ pins: [5, 14], invertPWM: true });
     var scalar = 256; // Friction coefficient
     var actioncounter = 0;
     var newcommand = "home()";
@@ -98,8 +98,8 @@ function letsPlay(){
 
 // These functions are for stopping and moving the car with a little workaround specific to the Feather HUZZAH board and Johnny-Five. Leave these as they are.
     function forward() {
-        leftWheel.fwd(0);
-        rightWheel.fwd(0);
+        leftWheel.fwd(speed);
+        rightWheel.fwd(speed);
         currentaction = "fd";
         console.log("Forward!");
     }
@@ -110,16 +110,22 @@ function letsPlay(){
         console.log("Stop!");
     }
     function left() {
-        leftWheel.rev(0);
-        rightWheel.fwd(0);
+        leftWheel.rev(speed);
+        rightWheel.fwd(speed);
         currentaction = "lt";
         console.log("Left!");
     }
     function right() {
-        leftWheel.fwd(0);
-        rightWheel.rev(0);
+        leftWheel.fwd(speed);
+        rightWheel.rev(speed);
         currentaction = "rt";
         console.log("Right!");
+    }
+    function reverse() {
+        leftWheel.rev(speed);
+        rightWheel.rev(speed);
+        currentaction = "bk";
+        console.log("Back!");
     }
     function exit() {
         currentaction = "offline";
@@ -131,6 +137,7 @@ function letsPlay(){
         'up': forward,
         'left': left,
         'right': right,
+        'down': reverse,
         'space': stop,
         'q': exit
     };
